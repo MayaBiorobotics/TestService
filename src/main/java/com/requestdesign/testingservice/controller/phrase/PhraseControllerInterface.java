@@ -12,7 +12,4 @@ public interface PhraseControllerInterface {
 
     @GetMapping("/phrase")
     public ResponseEntity getAllPhrases();
-
-    @PostMapping("/phrase")
-    public ResponseEntity addPhrase(@RequestBody PhraseDto phraseDto);
 }

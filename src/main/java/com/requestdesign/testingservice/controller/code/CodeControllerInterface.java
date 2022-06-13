@@ -8,7 +8,4 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface CodeControllerInterface {
     @GetMapping("/code")
     public ResponseEntity getAllCodes();
-
-    @PostMapping("/code")
-    public ResponseEntity addCode(@RequestBody CodeDto codeDto);
 }
