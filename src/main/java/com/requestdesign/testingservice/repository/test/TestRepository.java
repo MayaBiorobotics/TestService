@@ -1,6 +1,7 @@
 package com.requestdesign.testingservice.repository.test;
 
 import com.requestdesign.testingservice.dto.test.TestCreateDto;
+import com.requestdesign.testingservice.dto.test.TestManuallyCreateDto;
 import com.requestdesign.testingservice.dto.test.question.QuestionBlockCreateDto;
 import com.requestdesign.testingservice.dto.test.question.QuestionCreateDto;
 import com.requestdesign.testingservice.dto.test.question.QuestionVariantAddDto;
@@ -230,5 +231,13 @@ public class TestRepository {
         }
 
         return id;
+    }
+
+    @Transactional
+    public Long createTestManually(TestManuallyCreateDto test) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        Long id = (Long)keyHolder.getKeys().get("id");
     }
 }
