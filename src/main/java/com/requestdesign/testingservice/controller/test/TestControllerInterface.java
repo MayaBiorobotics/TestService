@@ -73,12 +73,6 @@ public interface TestControllerInterface {
     @PostMapping("/question/{questionId}/addvariant")
     public ResponseEntity addVariantToQuestionById(@PathVariable Integer questionId);
 
-    @GetMapping("/phrase")
-    public ResponseEntity getAllPhrases();
-
-    @PostMapping("/phrase")
-    public ResponseEntity addPhrase(@RequestBody PhraseDto phraseDto);
-
     @PostMapping("/test")
     public ResponseEntity createTest(@RequestBody TestDto testDto);
 
@@ -93,28 +87,4 @@ public interface TestControllerInterface {
 
     @PostMapping("/test/create/manual")
     public ResponseEntity createTestManually(@RequestBody TestManualDto testManualDto);
-
-    @GetMapping("/phrase/{phraseId}")
-    public ResponseEntity getPhraseById(@PathVariable Integer phraseId);
-
-    @PutMapping("/phrase/{phraseId}")
-    public ResponseEntity editPhraseById(@PathVariable Integer phraseId);
-
-    @GetMapping("/code")
-    public ResponseEntity getAllCodes();
-
-    @PostMapping("/code")
-    public ResponseEntity addCode(@RequestBody CodeDto codeDto);
-
-    @GetMapping("/result/{resultId}")
-    public ResponseEntity getResultById(@PathVariable Integer resultId);
-
-    @GetMapping("/result/{resultId}/task/{taskId}")
-    public ResponseEntity getTaskFromResultById(@PathVariable Integer resultId, @PathVariable Integer taskId);
-
-    @GetMapping("/result/{resultId}/question/{questionId}")
-    public ResponseEntity getQuestionAnswerFromResultById(@PathVariable Integer resultId, @PathVariable Integer questionId);
-
-    @GetMapping("/statistic")
-    public ResponseEntity getAllStatistic();
 }
