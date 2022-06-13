@@ -1,6 +1,11 @@
 package com.requestdesign.testingservice.repository.test;
 
 import com.requestdesign.testingservice.dto.test.TestCreateDto;
+import com.requestdesign.testingservice.dto.test.question.QuestionBlockCreateDto;
+import com.requestdesign.testingservice.dto.test.question.QuestionCreateDto;
+import com.requestdesign.testingservice.dto.test.question.QuestionVariantAddDto;
+import com.requestdesign.testingservice.dto.test.task.TaskBlockCreateDto;
+import com.requestdesign.testingservice.dto.test.task.TaskCreateDto;
 import com.requestdesign.testingservice.entity.test.Question;
 import com.requestdesign.testingservice.entity.test.QuestionVariant;
 import com.requestdesign.testingservice.entity.test.Task;
@@ -128,7 +133,7 @@ public class TestRepository {
     }
 
     @Transactional
-    public void saveTest(TestCreateDto test) {
+    public Long saveTest(TestCreateDto test) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("title", test.getTitle());
         mapSqlParameterSource.addValue("url", test.getUrl());
@@ -153,7 +158,77 @@ public class TestRepository {
             mapSqlParameterSource.addValue("number", task_block.getInteger());
             namedParameterJdbcTemplate.update(addTaskBlockToTest, mapSqlParameterSource, holder);
         }
+        return id;
     }
 
+    @Transactional
+    public Long createTask(TaskCreateDto task) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        String createTaskQuery = "insert into task(text) " +
+                "values(:text)";
+        mapSqlParameterSource.addValue("text", task.getText());
+        KeyHolder holder = new GeneratedKeyHolder();
+        namedParameterJdbcTemplate.update(createTaskQuery, mapSqlParameterSource, holder);
+        Long id = (Long)holder.getKeys().get("id");
+        return id;
+    }
 
+    @Transactional
+    public Long createQuestion(QuestionCreateDto question) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        String createQuestionQuery = "insert into question(text, picture) "+
+                "values(:text, :picture)";
+        mapSqlParameterSource.addValue("text", question.getText());
+        mapSqlParameterSource.addValue("picture", question.getPicture());
+        KeyHolder holder = new GeneratedKeyHolder();
+        namedParameterJdbcTemplate.update(createQuestionQuery, mapSqlParameterSource, holder);
+        Long id = (Long)holder.getKeys().get("id");
+        return id;
+    }
+
+    @Transactional
+    public void addVariantToQuestion(QuestionVariantAddDto questionVariant) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        String addVariantQuery = "insert into question_variant(question_id, text, picture) "+
+                "values(:question_id, :text, :picture)";
+        namedParameterJdbcTemplate.update(addVariantQuery, mapSqlParameterSource);
+    }
+
+    @Transactional
+    public Long createTaskBlock(TaskBlockCreateDto taskBlock) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        String createQuestionQuery = "insert into task_block(title) "+
+                "values(:title)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        namedParameterJdbcTemplate.update(createQuestionQuery, mapSqlParameterSource, keyHolder);
+        Long id = (Long)keyHolder.getKeys().get("id");
+        String addTaskToBlockQuery = "insert into task_block_to_task(task_block_id, task_id) " +
+                "values(:task_block_id, :task_id)";
+        mapSqlParameterSource.addValue("task_block_id", id);
+        for(var task: taskBlock.getTaskIds()) {
+            mapSqlParameterSource.addValue("task_id", task);
+            namedParameterJdbcTemplate.update(addTaskToBlockQuery, mapSqlParameterSource);
+        }
+
+        return id;
+    }
+
+    @Transactional
+    public Long createQuestionBlock(QuestionBlockCreateDto questionBlockDto) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        String createQuestionQuery = "insert into question_block(title) "+
+                "values(:title)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        namedParameterJdbcTemplate.update(createQuestionQuery, mapSqlParameterSource, keyHolder);
+        Long id = (Long)keyHolder.getKeys().get("id");
+        String addTaskToBlockQuery = "insert into question_block_to_question(question_block_id, question_id) " +
+                "values(:task_block_id, :task_id)";
+        mapSqlParameterSource.addValue("task_block_id", id);
+        for(var question: questionBlockDto.getQuestionIds()) {
+            mapSqlParameterSource.addValue("question_id", question);
+            namedParameterJdbcTemplate.update(addTaskToBlockQuery, mapSqlParameterSource);
+        }
+
+        return id;
+    }
 }
