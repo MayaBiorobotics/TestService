@@ -6,6 +6,7 @@ import com.requestdesign.testingservice.entity.test.Task;
 import com.requestdesign.testingservice.entity.test.Test;
 import com.requestdesign.testingservice.exceptions.test.QuestionNotFoundException;
 import com.requestdesign.testingservice.exceptions.test.TaskNotFoundException;
+import com.requestdesign.testingservice.exceptions.test.TestNotFoundException;
 import com.requestdesign.testingservice.repository.test.TestRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +25,9 @@ public class TestService {
         this.testRepository = testRepository;
     }
 
-    public Test findTestById(Long id) {
+    public Test findTestById(Long id) throws TestNotFoundException {
         Test test = testRepository.findById(id);
-        return null;
+        return test;
     }
 
     public Question findQuestionById(Long id) throws QuestionNotFoundException {

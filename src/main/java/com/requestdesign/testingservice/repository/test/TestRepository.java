@@ -13,6 +13,7 @@ import com.requestdesign.testingservice.entity.test.Task;
 import com.requestdesign.testingservice.entity.test.Test;
 import com.requestdesign.testingservice.exceptions.test.QuestionNotFoundException;
 import com.requestdesign.testingservice.exceptions.test.TaskNotFoundException;
+import com.requestdesign.testingservice.exceptions.test.TestNotFoundException;
 import com.requestdesign.testingservice.rowmapper.test.SimpleTestRowMapper;
 import com.requestdesign.testingservice.rowmapper.test.TestRowMapper;
 import com.requestdesign.testingservice.rowmapper.test.question.QuestionRowMapper;
@@ -40,7 +41,7 @@ public class TestRepository {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    public Test findById(Long id) {
+    public Test findById(Long id) throws TestNotFoundException {
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         String selectByIdQuery = "select  " +
                 "test.title as title, " +
@@ -61,7 +62,12 @@ public class TestRepository {
                 "full join question as q " +
                 "on q.id = qbtq.question_id";
         parameterSource.addValue("id", id);
-        return namedParameterJdbcTemplate.query(selectByIdQuery, parameterSource, new TestRowMapper()).get(0);
+        Optional<Test> test = namedParameterJdbcTemplate.query(selectByIdQuery, parameterSource, new TestRowMapper()).stream().findFirst();
+        if(test.isEmpty()) {
+            throw new TestNotFoundException("Тест с таким id не существует");
+        } else {
+            return test.get();
+        }
     }
 
     public Question findQuestionById(Long id) throws QuestionNotFoundException {
@@ -235,9 +241,32 @@ public class TestRepository {
 
     @Transactional
     public Long createTestManually(TestManuallyCreateDto test) {
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        //TODO
+    }
 
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        Long id = (Long)keyHolder.getKeys().get("id");
+    public void editTestById(Long id) {
+
+    }
+
+    public void copyQuestionById(Long id) {
+
+    }
+
+    public void editQuestionTextById(Long id) {
+
+    }
+
+    public void editTaskTextById(Long id) {}
+
+    public void addQuestionBlockToTestById(Long test, Long block) {
+
+    }
+
+    public void addTaskBlockToTestById(Long test, Long block) {
+
+    }
+
+    public void addTaskToTaskBlock(Long task, Long taskBlock) {
+
     }
 }
