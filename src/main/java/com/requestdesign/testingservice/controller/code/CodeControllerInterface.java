@@ -1,5 +1,6 @@
 package com.requestdesign.testingservice.controller.code;
 
+import com.requestdesign.testingservice.dto.code.CodeDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,5 +11,5 @@ public interface CodeControllerInterface {
     public ResponseEntity getAllCodes();
 
     @PostMapping("/")
-    public ResponseEntity createCode();
+    public ResponseEntity createCode(@RequestBody CodeDto codeDto);
 }
