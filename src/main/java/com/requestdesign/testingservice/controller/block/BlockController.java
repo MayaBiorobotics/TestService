@@ -9,11 +9,13 @@ import com.requestdesign.testingservice.service.block.BlockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/block")
 public class BlockController implements BlockControllerInterface {
     private final BlockService blockService;
 

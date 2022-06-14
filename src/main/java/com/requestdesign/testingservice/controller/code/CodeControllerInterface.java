@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 public interface CodeControllerInterface {
-    @GetMapping("/code")
+    @GetMapping("/")
     public ResponseEntity getAllCodes();
+
+    @PostMapping("/")
+    public ResponseEntity createCode();
 }
