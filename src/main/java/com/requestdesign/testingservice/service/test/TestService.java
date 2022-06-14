@@ -1,11 +1,12 @@
 package com.requestdesign.testingservice.service.test;
 
+import com.requestdesign.testingservice.dto.test.TaskBlockNumberDto;
 import com.requestdesign.testingservice.dto.test.TestCreateDto;
-import com.requestdesign.testingservice.entity.test.Question;
-import com.requestdesign.testingservice.entity.test.Task;
+import com.requestdesign.testingservice.dto.test.TestManuallyCreateDto;
+import com.requestdesign.testingservice.dto.test.phrase.PhraseToTestDto;
+import com.requestdesign.testingservice.entity.phrase.TestPhrase;
 import com.requestdesign.testingservice.entity.test.Test;
-import com.requestdesign.testingservice.exceptions.test.QuestionNotFoundException;
-import com.requestdesign.testingservice.exceptions.test.TaskNotFoundException;
+import com.requestdesign.testingservice.exceptions.phrase.PhraseNotFoundException;
 import com.requestdesign.testingservice.exceptions.test.TestNotFoundException;
 import com.requestdesign.testingservice.repository.test.TestRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 
 @Slf4j
 @Service
@@ -30,37 +30,40 @@ public class TestService {
         return test;
     }
 
-    public Question findQuestionById(Long id) throws QuestionNotFoundException {
-        Question question = testRepository.findQuestionById(id);
-        return question;
-    }
-
-    public Task findTaskById(Long id) throws TaskNotFoundException {
-        Task task = testRepository.findTaskById(id);
-        return task;
-    }
-
-    public Set<Task> findTasksByTestId(Long id) {
-        Set<Task> task = testRepository.findTasksByTestId(id);
-        return task;
-    }
-
     public List<Test> findAllTests() {
         List<Test> tests = testRepository.findAllTests();
         return tests;
     }
 
-    public List<Task> findAllTasks() {
-        List<Task> tasks = testRepository.findAllTasks();
-        return tasks;
+    public Long saveTest(TestCreateDto test) {
+        Long id = testRepository.saveTest(test);
+        return id;
     }
 
-    public List<Question> findAllQuestions() {
-        List<Question> questions = testRepository.findAllQuestions();
-        return questions;
+    public Long saveTestManually(TestManuallyCreateDto testManuallyCreateDto) {
+        Long id = testRepository.createTestManually(testManuallyCreateDto);
+        return id;
     }
 
-    public void saveTest(TestCreateDto test) {
-        testRepository.saveTest(test);
+    public TestPhrase findPhraseFromTestById(Long testId, Long phraseId) throws PhraseNotFoundException {
+        TestPhrase testPhrase = testRepository.findPhraseFromTestById(testId, phraseId);
+        return testPhrase;
+    }
+
+    public void addPhraseToTest(Long testId, PhraseToTestDto phraseAddToTestDto) {
+        testRepository.addPhraseToTest(testId, phraseAddToTestDto);
+    }
+
+    public List<TestPhrase> findAllPhrasesFromTest(Long testId) {
+        List<TestPhrase> testPhrases = testRepository.findAllTestPhrasesFromTest(testId);
+        return testPhrases;
+    }
+
+    public void addTaskBlockToTest(Long testId, TaskBlockNumberDto taskBlockNumber) {
+        testRepository.addTaskBlockToTestById(testId, taskBlockNumber);
+    }
+
+    public void editPhraseInTest(Long testId, PhraseToTestDto phraseToTest) {
+        testRepository.editPhraseInTest(testId, phraseToTest);
     }
 }

@@ -5,6 +5,6 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class TaskCreateDto {
+public class TaskDto {
     private String text;
 }

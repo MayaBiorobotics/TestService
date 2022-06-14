@@ -1,36 +1,31 @@
 package com.requestdesign.testingservice.repository.test;
 
+import com.requestdesign.testingservice.dto.test.TaskBlockNumberDto;
 import com.requestdesign.testingservice.dto.test.TestCreateDto;
 import com.requestdesign.testingservice.dto.test.TestManuallyCreateDto;
+import com.requestdesign.testingservice.dto.test.phrase.PhraseToTestDto;
 import com.requestdesign.testingservice.dto.test.question.QuestionBlockCreateDto;
-import com.requestdesign.testingservice.dto.test.question.QuestionCreateDto;
-import com.requestdesign.testingservice.dto.test.question.QuestionVariantAddDto;
 import com.requestdesign.testingservice.dto.test.task.TaskBlockCreateDto;
-import com.requestdesign.testingservice.dto.test.task.TaskCreateDto;
-import com.requestdesign.testingservice.entity.test.Question;
-import com.requestdesign.testingservice.entity.test.QuestionVariant;
+import com.requestdesign.testingservice.dto.test.task.TaskDto;
+import com.requestdesign.testingservice.entity.phrase.TestPhrase;
 import com.requestdesign.testingservice.entity.test.Task;
 import com.requestdesign.testingservice.entity.test.Test;
-import com.requestdesign.testingservice.exceptions.test.QuestionNotFoundException;
+import com.requestdesign.testingservice.exceptions.phrase.PhraseNotFoundException;
 import com.requestdesign.testingservice.exceptions.test.TaskNotFoundException;
 import com.requestdesign.testingservice.exceptions.test.TestNotFoundException;
+import com.requestdesign.testingservice.rowmapper.phrase.TestPhraseRowMapper;
 import com.requestdesign.testingservice.rowmapper.test.SimpleTestRowMapper;
 import com.requestdesign.testingservice.rowmapper.test.TestRowMapper;
-import com.requestdesign.testingservice.rowmapper.test.question.QuestionRowMapper;
-import com.requestdesign.testingservice.rowmapper.test.question.QuestionVariantRowMapper;
 import com.requestdesign.testingservice.rowmapper.test.task.TaskRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Connection;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Repository
 public class TestRepository {
@@ -70,73 +65,10 @@ public class TestRepository {
         }
     }
 
-    public Question findQuestionById(Long id) throws QuestionNotFoundException {
-        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
-        String selectByIdQuery = "select  " +
-                "q.id as question_id, " +
-                "q.text as question_text, " +
-                "qv.id as question_variant_id, " +
-                "qv.text as question_variant_text " +
-                "from question as q " +
-                "right join question_variant as qv on qv.question_id = q.id";
-        parameterSource.addValue("id", id);
-        Optional<Question> question = namedParameterJdbcTemplate.query(selectByIdQuery, parameterSource, new QuestionRowMapper()).stream().findFirst();
-        if(question.isPresent()) {
-            question.get().setQuestionVariants(findQuestionVariantsByQuestionId(id));
-        } else {
-            throw new QuestionNotFoundException("Вопрос с данным id не найден");
-        }
-
-        return question.get();
-    }
-
-    public Set<QuestionVariant> findQuestionVariantsByQuestionId(Long id) {
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        String selectByIdQuery = "";
-        mapSqlParameterSource.addValue("id", id);
-        return new HashSet<>(namedParameterJdbcTemplate.query(selectByIdQuery, mapSqlParameterSource, new QuestionVariantRowMapper()));
-    }
-
-    public Set<Task> findTasksByTestId(Long id) {
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        String selectByIdQuery = "";
-        mapSqlParameterSource.addValue("id", id);
-        return new HashSet<>(namedParameterJdbcTemplate.query(selectByIdQuery, mapSqlParameterSource, new TaskRowMapper()));
-    }
-
-    public Task findTaskById(Long id) throws TaskNotFoundException {
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        String selectByIdQuery = "";
-        mapSqlParameterSource.addValue("id", id);
-        Optional<Task> task = namedParameterJdbcTemplate.query(selectByIdQuery, mapSqlParameterSource, new TaskRowMapper()).stream().findFirst();
-        if(task.isPresent()) {
-            return task.get();
-        } else {
-            throw new TaskNotFoundException("Задания с таким id нет");
-        }
-    }
-
     public List<Test> findAllTests() {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         String selectAllQuery = "select * from test";
         return new ArrayList<>(namedParameterJdbcTemplate.query(selectAllQuery, mapSqlParameterSource, new SimpleTestRowMapper()).stream().toList());
-    }
-
-    public List<Task> findAllTasks() {
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        String selectAllQuery = "select * from task";
-        return new ArrayList<>(namedParameterJdbcTemplate.query(selectAllQuery, mapSqlParameterSource, new TaskRowMapper()).stream().toList());
-    }
-
-    public List<Question> findAllQuestions() {
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        String selectAllQuery = "select * from question";
-        List<Question> questions = namedParameterJdbcTemplate.query(selectAllQuery, mapSqlParameterSource, new QuestionRowMapper()).stream().toList();
-        for(var question: questions) {
-            question.setQuestionVariants(new HashSet<>(findQuestionVariantsByQuestionId(question.getId())));
-        }
-
-        return questions;
     }
 
     @Transactional
@@ -166,39 +98,6 @@ public class TestRepository {
             namedParameterJdbcTemplate.update(addTaskBlockToTest, mapSqlParameterSource, holder);
         }
         return id;
-    }
-
-    @Transactional
-    public Long createTask(TaskCreateDto task) {
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        String createTaskQuery = "insert into task(text) " +
-                "values(:text)";
-        mapSqlParameterSource.addValue("text", task.getText());
-        KeyHolder holder = new GeneratedKeyHolder();
-        namedParameterJdbcTemplate.update(createTaskQuery, mapSqlParameterSource, holder);
-        Long id = (Long)holder.getKeys().get("id");
-        return id;
-    }
-
-    @Transactional
-    public Long createQuestion(QuestionCreateDto question) {
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        String createQuestionQuery = "insert into question(text, picture) "+
-                "values(:text, :picture)";
-        mapSqlParameterSource.addValue("text", question.getText());
-        mapSqlParameterSource.addValue("picture", question.getPicture());
-        KeyHolder holder = new GeneratedKeyHolder();
-        namedParameterJdbcTemplate.update(createQuestionQuery, mapSqlParameterSource, holder);
-        Long id = (Long)holder.getKeys().get("id");
-        return id;
-    }
-
-    @Transactional
-    public void addVariantToQuestion(QuestionVariantAddDto questionVariant) {
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        String addVariantQuery = "insert into question_variant(question_id, text, picture) "+
-                "values(:question_id, :text, :picture)";
-        namedParameterJdbcTemplate.update(addVariantQuery, mapSqlParameterSource);
     }
 
     @Transactional
@@ -242,6 +141,7 @@ public class TestRepository {
     @Transactional
     public Long createTestManually(TestManuallyCreateDto test) {
         //TODO
+        return null;
     }
 
     public void editTestById(Long id) {
@@ -256,17 +156,70 @@ public class TestRepository {
 
     }
 
-    public void editTaskTextById(Long id) {}
-
     public void addQuestionBlockToTestById(Long test, Long block) {
 
     }
 
-    public void addTaskBlockToTestById(Long test, Long block) {
-
+    public void addTaskBlockToTestById(Long test, TaskBlockNumberDto taskBlockNumber) {
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        String addTaskBlockQuery = "insert into test_to_block(test_id, task_block_id, number)" +
+                "values(:test_id, :task_block_id, :number)";
+        parameterSource.addValue("test_id", test);
+        parameterSource.addValue("task_block_id", taskBlockNumber.getTaskBlockId());
+        parameterSource.addValue("number", taskBlockNumber.getInteger());
+        namedParameterJdbcTemplate.update(addTaskBlockQuery, parameterSource);
     }
 
     public void addTaskToTaskBlock(Long task, Long taskBlock) {
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        String addTaskToBlock = "insert into task_block_to_task(task_block_id, task_id) "+
+                "values(:task_block, :task_id)";
+        parameterSource.addValue("task_block", taskBlock);
+        parameterSource.addValue("task_id", task);
+        namedParameterJdbcTemplate.update(addTaskToBlock, parameterSource);
+    }
 
+    public TestPhrase findPhraseFromTestById(Long testId, Long phraseId) throws PhraseNotFoundException {
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        String findPhraseFromTest = "select * from test_phrase as tp where tp.test_id = :test_id and tp.phrase_id = :phrase_id";
+        parameterSource.addValue("test_id", testId);
+        parameterSource.addValue("phrase_id", phraseId);
+        Optional<TestPhrase> testPhrase = namedParameterJdbcTemplate.query(findPhraseFromTest, parameterSource, new TestPhraseRowMapper()).stream().findFirst();
+        if(testPhrase.isEmpty()) {
+            throw new PhraseNotFoundException("Фараза с таким id не указана в тесте");
+        } else {
+            return testPhrase.get();
+        }
+    }
+
+    public void addPhraseToTest(Long testId, PhraseToTestDto phraseAddToTestDto) {
+        try {
+            MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+            String addPhraseQuery = "insert into test_phrase(phrase_id, intensivity, test_id) "+
+                    "values(:phrase_id, :intensivity, :test_id)";
+            parameterSource.addValue("phrase_id", phraseAddToTestDto.getPhraseId());
+            parameterSource.addValue("intensivity", phraseAddToTestDto.getIntensivity());
+            parameterSource.addValue("test_id", testId);
+            namedParameterJdbcTemplate.update(addPhraseQuery, parameterSource);
+        } catch(Exception e) {
+            System.out.println("Hello world");
+        }
+    }
+
+    public List<TestPhrase> findAllTestPhrasesFromTest(Long testId) {
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        String selectAllQuery = "select * from test_phrase as tp where tp.test_id = :id";
+        parameterSource.addValue("id", testId);
+        List<TestPhrase> testPhrases = namedParameterJdbcTemplate.query(selectAllQuery, parameterSource, new TestPhraseRowMapper()).stream().toList();
+        return testPhrases;
+    }
+
+    public void editPhraseInTest(Long testId, PhraseToTestDto phraseToTest) {
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        String editPhraseQuery = "update test_phrase set intensivity = :intensivity where test_id = :test_id and phrase_id = :phrase_id";
+        parameterSource.addValue("test_id", testId);
+        parameterSource.addValue("phrase_id", phraseToTest.getPhraseId());
+        parameterSource.addValue("intensivity", phraseToTest.getIntensivity());
+        namedParameterJdbcTemplate.update(editPhraseQuery, parameterSource);
     }
 }

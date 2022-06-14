@@ -8,5 +8,5 @@ import java.util.ArrayList;
 @Data
 @NoArgsConstructor
 public class TaskBlockManuallyCreateDto {
-    private ArrayList<TaskCreateDto> tasks;
+    private ArrayList<TaskDto> tasks;
 }

@@ -1,7 +1,12 @@
 package com.requestdesign.testingservice.controller.test;
 
+import com.requestdesign.testingservice.dto.test.TaskBlockNumberDto;
 import com.requestdesign.testingservice.dto.test.TestCreateDto;
+import com.requestdesign.testingservice.dto.test.TestManuallyCreateDto;
+import com.requestdesign.testingservice.dto.test.phrase.PhraseToTestDto;
+import com.requestdesign.testingservice.entity.phrase.TestPhrase;
 import com.requestdesign.testingservice.entity.test.Test;
+import com.requestdesign.testingservice.exceptions.phrase.PhraseNotFoundException;
 import com.requestdesign.testingservice.exceptions.test.TestNotFoundException;
 import com.requestdesign.testingservice.service.test.TestService;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +28,7 @@ public class TestController implements TestControllerInterface{
         this.testService = testService;
     }
 
+
     @Override
     public ResponseEntity getTestById(Long testId) {
         try {
@@ -35,117 +41,26 @@ public class TestController implements TestControllerInterface{
 
     @Override
     public ResponseEntity editTestById(Long testId) {
+        //TODO
         return null;
     }
 
     @Override
-    public ResponseEntity deleteTestById(Long testId) {
-        return null;
+    public ResponseEntity addTaskBlockToTest(Long testId, TaskBlockNumberDto taskBlockNumber) {
+        testService.addTaskBlockToTest(testId, taskBlockNumber);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity addTaskToBlock(Long testId, TaskBlockDto taskBlockDto) {
-        return null;
+    public ResponseEntity getAllPhrasesOfTest(Long testId) {
+        List<TestPhrase> testPhrases = testService.findAllPhrasesFromTest(testId);
+        return new ResponseEntity(testPhrases, HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity getPhrasesFromTestById(Long testId) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity addPhraseToTest(Long testId, PhraseDto phraseDto) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity getTaskById(Long taskId) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity editTaskById(Long taskId, TaskDto taskDto) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity getQuestinoBlockById(Long blockId) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity editQuestionBlockById(BlockDto blockDto) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity deleteQuestionBlockById(Long blockId) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity getAllTasks() {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity getTaskBlockById(Long blockId) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity editTaskBlockById(Long blockId) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity deleteBlockTaskById(Long blockId) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity getAllQuestionBlocks() {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity createQuestionBlock(QuestionBlockDto questionBlockDto) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity getAllTaskBlocks() {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity createTaskBlock(TaskBlockDto taskBlockDto) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity getAllQuestions() {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity createQuestion(QuestionDto questionDto) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity getQuestionById(Long questionId) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity addVariantToQuestionById(Long questionId) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity createTest(TestDto testDto) {
-        return null;
+    public ResponseEntity addPhraseToTest(Long testId, PhraseToTestDto phraseAddToTestDto) {
+        testService.addPhraseToTest(testId, phraseAddToTestDto);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @Override
@@ -155,24 +70,30 @@ public class TestController implements TestControllerInterface{
     }
 
     @Override
-    public ResponseEntity getPhraseFromTestById(Long testId, Long phraseId) {
-        return null;
+    public ResponseEntity createTest(TestCreateDto testCreateDto) {
+        Long id = testService.saveTest(testCreateDto);
+        return new ResponseEntity(id, HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity editPhraseFromTestById(Long testId, Long phraseId) {
-        return null;
+    public ResponseEntity getPhraseFromTest(Long testId, Long phraseId) {
+        try {
+            TestPhrase testPhrase = testService.findPhraseFromTestById(testId, phraseId);
+            return new ResponseEntity(testPhrase, HttpStatus.OK);
+        } catch (PhraseNotFoundException e) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
     }
-
 
     @Override
-    public ResponseEntity createTestManually(TestManualDto testManualDto) {
-        return null;
-    }
-
-    @PostMapping("/")
-    public ResponseEntity createTest(@RequestBody TestCreateDto testCreateDto) {
-        testService.saveTest(testCreateDto);
+    public ResponseEntity editPhraseInTest(Long testId, PhraseToTestDto phraseToTest) {
+        testService.editPhraseInTest(testId, phraseToTest);
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity createTestManually(TestManuallyCreateDto testManuallyCreateDto) {
+        Long id = testService.saveTestManually(testManuallyCreateDto);
+        return new ResponseEntity(id, HttpStatus.OK);
     }
 }

@@ -11,7 +11,9 @@ public class StatisticRowMapper implements RowMapper<Statistic> {
     public Statistic mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new Statistic()
                 .setId(rs.getLong("id"))
-                .setDate(rs.getString("date"))
-                .setClickAmount(rs.getInt(""))
+                .setDate(rs.getDate("timestamp"))
+                .setClickAmount(rs.getInt("click_amount"))
+                .setTestId(rs.getLong("test_id"))
+                .setPhraseId(rs.getLong("phrase_id"));
     }
 }
