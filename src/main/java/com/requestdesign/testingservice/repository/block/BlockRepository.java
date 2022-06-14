@@ -6,6 +6,7 @@ import com.requestdesign.testingservice.entity.test.QuestionBlock;
 import com.requestdesign.testingservice.entity.test.Task;
 import com.requestdesign.testingservice.entity.test.TaskBlock;
 import com.requestdesign.testingservice.repository.task.TaskRepository;
+import com.requestdesign.testingservice.rowmapper.test.task.TaskBlockRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -28,28 +29,51 @@ public class BlockRepository {
     }
 
     public QuestionBlock findQuestionBlockById(Long blockId) {
+        //TODO
+        return null;
     }
 
     public void editQuestionBlockById(Long blockId, QuestionBlockCreateDto questionBlockCreateDto) {
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        String editTaskBlockQuery = "";
+        if(questionBlockCreateDto.getTitle() != null) {
+            parameterSource.addValue("title", questionBlockCreateDto.getTitle());
+            editTaskBlockQuery = "update task_block set title = :title";
+            namedParameterJdbcTemplate.update(editTaskBlockQuery, parameterSource);
+        }
+        for(var task: questionBlockCreateDto.getQuestionIds()) {
+            parameterSource.addValue("task_id", task);
+            editTaskBlockQuery = "insert into question_block_to_question(question_block_id, question_id) VALUES (:block_id, :task_id)";
+        }
     }
 
     public TaskBlock findTaskBlockById() {
+        //TODO
+        return null;
     }
 
     public void editTaskBlockById(Long blockId, TaskBlockCreateDto taskBlockCreateDto) {
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        String editTaskBlockQuery = "";
+        if(taskBlockCreateDto.getTitle() != null) {
+            parameterSource.addValue("title", taskBlockCreateDto.getTitle());
+            editTaskBlockQuery = "update task_block set title = :title";
+            namedParameterJdbcTemplate.update(editTaskBlockQuery, parameterSource);
+        }
+        for(var task: taskBlockCreateDto.getTaskIds()) {
+            parameterSource.addValue("task_id", task);
+            editTaskBlockQuery = "insert into task_block_to_task(task_block_id, task_id) VALUES (:block_id, :task_id)";
+        }
     }
 
     public List<QuestionBlock> findAllQuestionBlocks() {
+        //TODO
+        return null;
     }
 
     public List<TaskBlock> findAllTaskBlocks() {
-        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
-        String selectAllQuery = "select * from task_block";
-
-        List<Task> tasks = taskRepository.findAllTasks();
-        for(var task: tasks) {
-
-        }
+        //TODO
+        return null;
     }
 
     @Transactional
