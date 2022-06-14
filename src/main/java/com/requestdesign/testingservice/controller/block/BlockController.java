@@ -2,11 +2,16 @@ package com.requestdesign.testingservice.controller.block;
 
 import com.requestdesign.testingservice.dto.test.question.QuestionBlockCreateDto;
 import com.requestdesign.testingservice.dto.test.task.TaskBlockCreateDto;
+import com.requestdesign.testingservice.dto.test.task.TaskBlockManuallyCreateDto;
 import com.requestdesign.testingservice.entity.test.QuestionBlock;
+import com.requestdesign.testingservice.entity.test.TaskBlock;
+import com.requestdesign.testingservice.service.block.BlockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 public class BlockController implements BlockControllerInterface {
@@ -30,31 +35,37 @@ public class BlockController implements BlockControllerInterface {
 
     @Override
     public ResponseEntity getTaskBlockById(Long blockId) {
-        return null;
+        TaskBlock taskBlock = blockService.getTaskBlockById();
+        return new ResponseEntity(taskBlock, HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity editTaskBlockById(Long blockId, TaskBlockCreateDto taskBlockCreateDto) {
-        return null;
+        blockService.editTaskBlockById(blockId, taskBlockCreateDto);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity createQuestionBlock(QuestionBlockCreateDto questionBlockCreateDto) {
-        return null;
+        Long id = blockService.createQuestionBlock(questionBlockCreateDto);
+        return new ResponseEntity(id, HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity getAllQuestionBlock() {
-        return null;
+        List<QuestionBlock> questionBlockList = blockService.getAllQuestionBlocks();
+        return new ResponseEntity(questionBlockList, HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity getAllTaskBlocks() {
-        return null;
+        List<TaskBlock> taskBlocks = blockService.getAllTaskBlocks();
+        return new ResponseEntity(taskBlocks, HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity createTaskBlock(TaskBlockCreateDto taskBlockCreateDto) {
-        return null;
+        blockService.createTaskBlock(taskBlockCreateDto);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

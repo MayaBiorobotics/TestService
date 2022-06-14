@@ -101,63 +101,9 @@ public class TestRepository {
     }
 
     @Transactional
-    public Long createTaskBlock(TaskBlockCreateDto taskBlock) {
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        String createQuestionQuery = "insert into task_block(title) "+
-                "values(:title)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        namedParameterJdbcTemplate.update(createQuestionQuery, mapSqlParameterSource, keyHolder);
-        Long id = (Long)keyHolder.getKeys().get("id");
-        String addTaskToBlockQuery = "insert into task_block_to_task(task_block_id, task_id) " +
-                "values(:task_block_id, :task_id)";
-        mapSqlParameterSource.addValue("task_block_id", id);
-        for(var task: taskBlock.getTaskIds()) {
-            mapSqlParameterSource.addValue("task_id", task);
-            namedParameterJdbcTemplate.update(addTaskToBlockQuery, mapSqlParameterSource);
-        }
-
-        return id;
-    }
-
-    @Transactional
-    public Long createQuestionBlock(QuestionBlockCreateDto questionBlockDto) {
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        String createQuestionQuery = "insert into question_block(title) "+
-                "values(:title)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        namedParameterJdbcTemplate.update(createQuestionQuery, mapSqlParameterSource, keyHolder);
-        Long id = (Long)keyHolder.getKeys().get("id");
-        String addTaskToBlockQuery = "insert into question_block_to_question(question_block_id, question_id) " +
-                "values(:task_block_id, :task_id)";
-        mapSqlParameterSource.addValue("task_block_id", id);
-        for(var question: questionBlockDto.getQuestionIds()) {
-            mapSqlParameterSource.addValue("question_id", question);
-            namedParameterJdbcTemplate.update(addTaskToBlockQuery, mapSqlParameterSource);
-        }
-
-        return id;
-    }
-
-    @Transactional
     public Long createTestManually(TestManuallyCreateDto test) {
         //TODO
         return null;
-    }
-
-    public void editTestById(Long id) {
-
-    }
-
-    public void copyQuestionById(Long id) {
-
-    }
-
-    public void editQuestionTextById(Long id) {
-
-    }
-
-    public void addQuestionBlockToTestById(Long test, Long block) {
-
     }
 
     public void addTaskBlockToTestById(Long test, TaskBlockNumberDto taskBlockNumber) {
