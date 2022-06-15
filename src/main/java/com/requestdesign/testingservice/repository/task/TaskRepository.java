@@ -32,7 +32,7 @@ public class TaskRepository {
 
     public Task findTaskById(Long id) throws TaskNotFoundException {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        String selectByIdQuery = "";
+        String selectByIdQuery = "select * from task where task.id = :id";
         mapSqlParameterSource.addValue("id", id);
         Optional<Task> task = namedParameterJdbcTemplate.query(selectByIdQuery, mapSqlParameterSource, new TaskRowMapper()).stream().findFirst();
         if(task.isPresent()) {
