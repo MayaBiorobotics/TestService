@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Repository
 public class QuestionRepository {
@@ -32,8 +33,9 @@ public class QuestionRepository {
     public Question findQuestionById(Long id) throws QuestionNotFoundException {
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         String selectByIdQuery = "select  " +
-                "q.id as question_id, " +
-                "q.text as question_text, " +
+                "q.id as id, " +
+                "q.text as text, " +
+                "q.picture as picture, " +
                 "qv.id as question_variant_id, " +
                 "qv.text as question_variant_text " +
                 "from question as q " +
@@ -49,11 +51,11 @@ public class QuestionRepository {
         return question.get();
     }
 
-    public Set<QuestionVariant> findQuestionVariantsByQuestionId(Long id) {
+    public List<QuestionVariant> findQuestionVariantsByQuestionId(Long id) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        String selectByIdQuery = "";
+        String selectByIdQuery = "select * from question_variant as qv join question as q on q.id = qv.question_id where q.id = :id";
         mapSqlParameterSource.addValue("id", id);
-        return new HashSet<>(namedParameterJdbcTemplate.query(selectByIdQuery, mapSqlParameterSource, new QuestionVariantRowMapper()));
+        return namedParameterJdbcTemplate.query(selectByIdQuery, mapSqlParameterSource, new QuestionVariantRowMapper()).stream().toList();
     }
 
     @Transactional
@@ -70,10 +72,13 @@ public class QuestionRepository {
     }
 
     @Transactional
-    public void addVariantToQuestion(QuestionVariantAddDto questionVariant) {
+    public void addVariantToQuestion(Long questionId, QuestionVariantAddDto questionVariant) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         String addVariantQuery = "insert into question_variant(question_id, text, picture) "+
                 "values(:question_id, :text, :picture)";
+        mapSqlParameterSource.addValue("question_id", questionId);
+        mapSqlParameterSource.addValue("text", questionVariant.getText());
+        mapSqlParameterSource.addValue("picture", questionVariant.getPicture());
         namedParameterJdbcTemplate.update(addVariantQuery, mapSqlParameterSource);
     }
 
@@ -82,7 +87,7 @@ public class QuestionRepository {
         String selectAllQuery = "select * from question";
         List<Question> questions = namedParameterJdbcTemplate.query(selectAllQuery, mapSqlParameterSource, new QuestionRowMapper()).stream().toList();
         for(var question: questions) {
-            question.setQuestionVariants(new HashSet<>(findQuestionVariantsByQuestionId(question.getId())));
+            question.setQuestionVariants(findQuestionVariantsByQuestionId(question.getId()).stream().toList());
         }
 
         return questions;

@@ -7,6 +7,7 @@ import lombok.experimental.Accessors;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -16,5 +17,5 @@ public class Question {
     private Long id;
     private String text;
     private String picture;
-    private Set<QuestionVariant> questionVariants;
+    private List<QuestionVariant> questionVariants;
 }

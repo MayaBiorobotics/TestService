@@ -10,10 +10,9 @@ import java.util.Set;
 public class QuestionRowMapper implements RowMapper<Question> {
     @Override
     public Question mapRow(ResultSet rs, int rowNum) throws SQLException {
-        Question question = new Question()
-                .setId(rs.getLong("question_id"))
-                .setText(rs.getString("question_text"))
-                .setPicture(rs.getString("question_picture"));
-        return question;
+        return new Question()
+                .setId(rs.getLong("id"))
+                .setText(rs.getString("text"))
+                .setPicture(rs.getString("picture"));
     }
 }

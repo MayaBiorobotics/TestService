@@ -35,6 +35,6 @@ public class QuestionService {
     }
 
     public void addVariantToQuestion(Long questionId, QuestionVariantAddDto questionVariantAddDto) {
-        questionRepository.addVariantToQuestion(questionVariantAddDto);
+        questionRepository.addVariantToQuestion(questionId, questionVariantAddDto);
     }
 }
