@@ -39,4 +39,11 @@ public class StatisticRepository {
         List<Statistic> statistics = namedParameterJdbcTemplate.query(selectByIdQuery, parameterSource, new StatisticRowMapper()).stream().toList();
         return statistics;
     }
+
+    public List<Statistic> findAll() {
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        String selectQuery = "select * from test_statistics";
+        List<Statistic> statistics = namedParameterJdbcTemplate.query(selectQuery, parameterSource, new StatisticRowMapper()).stream().toList();
+        return statistics;
+    }
 }
