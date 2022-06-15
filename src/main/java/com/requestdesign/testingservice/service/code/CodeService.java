@@ -27,7 +27,7 @@ public class CodeService {
 
     public String createCode(CodeDto codeDto) {
         String code = RandomString.make(STANDART_CODE_LENGTH);
-        codeRepository.addCode(code, codeDto);
+        codeRepository.generateCode(code, codeDto);
         return code;
     }
 }
