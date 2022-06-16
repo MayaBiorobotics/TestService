@@ -12,7 +12,7 @@ import java.util.Random;
 
 @Service
 public class CodeService {
-    private static int STANDART_CODE_LENGTH = 8;
+    private static int STANDART_CODE_LENGTH = 7;
     private final CodeRepository codeRepository;
 
     @Autowired

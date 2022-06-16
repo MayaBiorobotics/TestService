@@ -74,6 +74,7 @@ public class TestController implements TestControllerInterface{
 
     @Override
     public ResponseEntity createTest(TestCreateDto testCreateDto) {
+        System.out.println(testCreateDto);
         Long id = testService.saveTest(testCreateDto);
         return new ResponseEntity(id, HttpStatus.OK);
     }
