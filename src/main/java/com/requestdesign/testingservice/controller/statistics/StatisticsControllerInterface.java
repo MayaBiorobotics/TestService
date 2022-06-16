@@ -4,6 +4,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 
 public interface StatisticsControllerInterface {
-    @GetMapping("/statistic")
+    @GetMapping("/")
     public ResponseEntity getAllStatistic();
 }
