@@ -6,6 +6,7 @@ import com.requestdesign.testingservice.dto.test.TestManuallyCreateDto;
 import com.requestdesign.testingservice.dto.test.phrase.PhraseToTestDto;
 import com.requestdesign.testingservice.entity.phrase.TestPhrase;
 import com.requestdesign.testingservice.entity.test.Test;
+import com.requestdesign.testingservice.exceptions.block.TaskBlockNotFoundException;
 import com.requestdesign.testingservice.exceptions.phrase.PhraseNotFoundException;
 import com.requestdesign.testingservice.exceptions.test.TestNotFoundException;
 import com.requestdesign.testingservice.repository.test.TestRepository;
@@ -25,7 +26,7 @@ public class TestService {
         this.testRepository = testRepository;
     }
 
-    public Test findTestById(Long id) throws TestNotFoundException {
+    public Test findTestById(Long id) throws TestNotFoundException, TaskBlockNotFoundException {
         Test test = testRepository.findById(id);
         return test;
     }

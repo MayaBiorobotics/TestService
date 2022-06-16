@@ -9,7 +9,9 @@ import java.sql.SQLException;
 public class TaskBlockRowMapper implements RowMapper<TaskBlock> {
     @Override
     public TaskBlock mapRow(ResultSet rs, int rowNum) throws SQLException {
-        //TODO
-        return null;
+        return new TaskBlock()
+                .setId(rs.getLong("task_block_id"))
+                .setTitle(rs.getString("title"))
+                .setNumber(rs.getInt("number"));
     }
 }

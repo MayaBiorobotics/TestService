@@ -6,6 +6,7 @@ import com.requestdesign.testingservice.dto.test.TestManuallyCreateDto;
 import com.requestdesign.testingservice.dto.test.phrase.PhraseToTestDto;
 import com.requestdesign.testingservice.entity.phrase.TestPhrase;
 import com.requestdesign.testingservice.entity.test.Test;
+import com.requestdesign.testingservice.exceptions.block.TaskBlockNotFoundException;
 import com.requestdesign.testingservice.exceptions.phrase.PhraseNotFoundException;
 import com.requestdesign.testingservice.exceptions.test.TestNotFoundException;
 import com.requestdesign.testingservice.service.test.TestService;
@@ -36,6 +37,8 @@ public class TestController implements TestControllerInterface{
             return new ResponseEntity(test, HttpStatus.OK);
         } catch (TestNotFoundException e) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
+        } catch (TaskBlockNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 

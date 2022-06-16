@@ -8,14 +8,17 @@ import com.requestdesign.testingservice.dto.test.question.QuestionBlockCreateDto
 import com.requestdesign.testingservice.dto.test.task.TaskBlockCreateDto;
 import com.requestdesign.testingservice.dto.test.task.TaskDto;
 import com.requestdesign.testingservice.entity.phrase.TestPhrase;
-import com.requestdesign.testingservice.entity.test.Task;
-import com.requestdesign.testingservice.entity.test.Test;
+import com.requestdesign.testingservice.entity.test.*;
+import com.requestdesign.testingservice.exceptions.block.TaskBlockNotFoundException;
 import com.requestdesign.testingservice.exceptions.phrase.PhraseNotFoundException;
 import com.requestdesign.testingservice.exceptions.test.TaskNotFoundException;
 import com.requestdesign.testingservice.exceptions.test.TestNotFoundException;
+import com.requestdesign.testingservice.repository.block.BlockRepository;
 import com.requestdesign.testingservice.rowmapper.phrase.TestPhraseRowMapper;
 import com.requestdesign.testingservice.rowmapper.test.SimpleTestRowMapper;
 import com.requestdesign.testingservice.rowmapper.test.TestRowMapper;
+import com.requestdesign.testingservice.rowmapper.test.question.QuestionBlockRowMapper;
+import com.requestdesign.testingservice.rowmapper.test.task.TaskBlockRowMapper;
 import com.requestdesign.testingservice.rowmapper.test.task.TaskRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -30,39 +33,41 @@ import java.util.*;
 @Repository
 public class TestRepository {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final BlockRepository blockRepository;
 
     @Autowired
-    public TestRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    public TestRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, BlockRepository blockRepository) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.blockRepository = blockRepository;
     }
 
-    public Test findById(Long id) throws TestNotFoundException {
+    public Test findById(Long id) throws TestNotFoundException, TaskBlockNotFoundException {
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
-        String selectByIdQuery = "select  " +
-                "test.title as title, " +
-                "test.region as region, " +
-                "test.url as url, " +
-                "qb.id as question_block_id, " +
-                "qb.title as question_block_title, " +
-                "q.id as question_id, " +
-                "q.text as question_text, " +
-                "q.picture as question_picture " +
-                "from test as test  " +
-                "full join test_to_question_block as ttqb " +
-                "on ttqb.test_id = test.id " +
-                "full join question_block as qb " +
-                "on qb.id = ttqb.question_block_id " +
-                "full join question_block_to_question as qbtq " +
-                "on qbtq.question_block_id = qb.id " +
-                "full join question as q " +
-                "on q.id = qbtq.question_id";
+        String selectByIdQuery = "select * from test where id = :id";
         parameterSource.addValue("id", id);
         Optional<Test> test = namedParameterJdbcTemplate.query(selectByIdQuery, parameterSource, new TestRowMapper()).stream().findFirst();
         if(test.isEmpty()) {
             throw new TestNotFoundException("Тест с таким id не существует");
-        } else {
-            return test.get();
         }
+        String selectTaskBlocksQuery = "select * from test_to_block as ttb join task_block as tb on ttb.task_block_id = tb.id where test_id = :id";
+        List<TaskBlock> taskBlocks = namedParameterJdbcTemplate.query(selectTaskBlocksQuery, parameterSource, new TaskBlockRowMapper()).stream().toList().stream().toList();
+        List<TaskBlock> tasks = new ArrayList<>();
+        for(var block: taskBlocks) {
+            block = blockRepository.findTaskBlockById(block.getId());
+            tasks.add(block);
+        }
+        String selectQuestionBlocksQuery = "select * from test_to_question_block as ttqb join question_block as qb on qb.id = ttqb.question_block_id where ttqb.test_id = :id";
+        List<QuestionBlock> questions = namedParameterJdbcTemplate.query(selectQuestionBlocksQuery, parameterSource, new QuestionBlockRowMapper()).stream().toList();
+        List<QuestionBlock> questionBlocks = new ArrayList<>();
+        for(var block: questions) {
+            block = blockRepository.findQuestionBlockById(block.getId());
+            questionBlocks.add(block);
+        }
+
+        test.get().setQuestionBlocks(new HashSet<>(questionBlocks));
+        test.get().setTaskBlocks(new HashSet<>(tasks));
+
+        return test.get();
     }
 
     public List<Test> findAllTests() {
@@ -73,6 +78,7 @@ public class TestRepository {
 
     @Transactional
     public Long saveTest(TestCreateDto test) {
+        System.out.println(test);
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("title", test.getTitle());
         mapSqlParameterSource.addValue("url", test.getUrl());

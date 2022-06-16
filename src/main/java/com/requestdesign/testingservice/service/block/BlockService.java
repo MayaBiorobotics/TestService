@@ -5,6 +5,7 @@ import com.requestdesign.testingservice.dto.test.task.TaskBlockCreateDto;
 import com.requestdesign.testingservice.entity.test.Question;
 import com.requestdesign.testingservice.entity.test.QuestionBlock;
 import com.requestdesign.testingservice.entity.test.TaskBlock;
+import com.requestdesign.testingservice.exceptions.block.TaskBlockNotFoundException;
 import com.requestdesign.testingservice.repository.block.BlockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class BlockService {
         this.blockRepository = blockRepository;
     }
 
-    public QuestionBlock getQuestionBlockById(Long blockId) {
+    public QuestionBlock getQuestionBlockById(Long blockId) throws TaskBlockNotFoundException {
         QuestionBlock questionBlock = blockRepository.findQuestionBlockById(blockId);
         return questionBlock;
     }
@@ -29,8 +30,8 @@ public class BlockService {
         blockRepository.editQuestionBlockById(blockId, questionBlockCreateDto);
     }
 
-    public TaskBlock getTaskBlockById() {
-        TaskBlock taskBlock = blockRepository.findTaskBlockById();
+    public TaskBlock getTaskBlockById(Long id) throws TaskBlockNotFoundException {
+        TaskBlock taskBlock = blockRepository.findTaskBlockById(id);
         return taskBlock;
     }
 
@@ -43,12 +44,12 @@ public class BlockService {
         return id;
     }
 
-    public List<QuestionBlock> getAllQuestionBlocks() {
+    public List<QuestionBlock> getAllQuestionBlocks() throws TaskBlockNotFoundException {
         List<QuestionBlock> questions = blockRepository.findAllQuestionBlocks();
         return questions;
     }
 
-    public List<TaskBlock> getAllTaskBlocks() {
+    public List<TaskBlock> getAllTaskBlocks() throws TaskBlockNotFoundException {
         List<TaskBlock> taskBlocks = blockRepository.findAllTaskBlocks();
         return taskBlocks;
     }

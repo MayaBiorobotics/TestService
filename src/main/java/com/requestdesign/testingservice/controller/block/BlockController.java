@@ -5,6 +5,7 @@ import com.requestdesign.testingservice.dto.test.task.TaskBlockCreateDto;
 import com.requestdesign.testingservice.dto.test.task.TaskBlockManuallyCreateDto;
 import com.requestdesign.testingservice.entity.test.QuestionBlock;
 import com.requestdesign.testingservice.entity.test.TaskBlock;
+import com.requestdesign.testingservice.exceptions.block.TaskBlockNotFoundException;
 import com.requestdesign.testingservice.service.block.BlockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,12 @@ public class BlockController implements BlockControllerInterface {
     }
     @Override
     public ResponseEntity getQuestionBlockById(Long blockId) {
-        QuestionBlock questionBlock = blockService.getQuestionBlockById(blockId);
+        QuestionBlock questionBlock = null;
+        try {
+            questionBlock = blockService.getQuestionBlockById(blockId);
+        } catch (TaskBlockNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         return new ResponseEntity(questionBlock, HttpStatus.OK);
     }
 
@@ -37,7 +43,12 @@ public class BlockController implements BlockControllerInterface {
 
     @Override
     public ResponseEntity getTaskBlockById(Long blockId) {
-        TaskBlock taskBlock = blockService.getTaskBlockById();
+        TaskBlock taskBlock = null;
+        try {
+            taskBlock = blockService.getTaskBlockById(blockId);
+        } catch (TaskBlockNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         return new ResponseEntity(taskBlock, HttpStatus.OK);
     }
 
@@ -55,13 +66,23 @@ public class BlockController implements BlockControllerInterface {
 
     @Override
     public ResponseEntity getAllQuestionBlock() {
-        List<QuestionBlock> questionBlockList = blockService.getAllQuestionBlocks();
+        List<QuestionBlock> questionBlockList = null;
+        try {
+            questionBlockList = blockService.getAllQuestionBlocks();
+        } catch (TaskBlockNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         return new ResponseEntity(questionBlockList, HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity getAllTaskBlocks() {
-        List<TaskBlock> taskBlocks = blockService.getAllTaskBlocks();
+        List<TaskBlock> taskBlocks = null;
+        try {
+            taskBlocks = blockService.getAllTaskBlocks();
+        } catch (TaskBlockNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         return new ResponseEntity(taskBlocks, HttpStatus.OK);
     }
 

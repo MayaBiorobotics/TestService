@@ -12,7 +12,6 @@ import java.util.ArrayList;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class TestCreateDto {
     private String title;
     private String region;
