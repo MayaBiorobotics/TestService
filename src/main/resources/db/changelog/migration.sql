@@ -82,10 +82,7 @@ create table task
 create table task_block
 (
     id bigint default nextval('task_block_sequence') not null primary key,
-    task_id bigint not null,
-    title varchar(100) not null,
-
-    foreign key (task_id) references task(id)
+    title varchar(100) not null
 );
 
 create sequence test_result_sequence

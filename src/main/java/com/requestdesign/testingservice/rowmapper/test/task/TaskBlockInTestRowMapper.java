@@ -6,11 +6,12 @@ import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class TaskBlockRowMapper implements RowMapper<TaskBlock> {
+public class TaskBlockInTestRowMapper implements RowMapper<TaskBlock> {
     @Override
     public TaskBlock mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new TaskBlock()
-                .setId(rs.getLong("id"))
-                .setTitle(rs.getString("title"));
+                .setId(rs.getLong("task_block_id"))
+                .setTitle(rs.getString("title"))
+                .setNumber(rs.getInt("number"));
     }
 }

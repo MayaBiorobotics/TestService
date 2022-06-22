@@ -14,7 +14,7 @@ import com.requestdesign.testingservice.rowmapper.phrase.TestPhraseRowMapper;
 import com.requestdesign.testingservice.rowmapper.test.SimpleTestRowMapper;
 import com.requestdesign.testingservice.rowmapper.test.TestRowMapper;
 import com.requestdesign.testingservice.rowmapper.test.question.QuestionBlockRowMapper;
-import com.requestdesign.testingservice.rowmapper.test.task.TaskBlockRowMapper;
+import com.requestdesign.testingservice.rowmapper.test.task.TaskBlockInTestRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -45,7 +45,7 @@ public class TestRepository {
             throw new TestNotFoundException("Тест с таким id не существует");
         }
         String selectTaskBlocksQuery = "select * from test_to_block as ttb join task_block as tb on ttb.task_block_id = tb.id where test_id = :id";
-        List<TaskBlock> taskBlocks = namedParameterJdbcTemplate.query(selectTaskBlocksQuery, parameterSource, new TaskBlockRowMapper()).stream().toList().stream().toList();
+        List<TaskBlock> taskBlocks = namedParameterJdbcTemplate.query(selectTaskBlocksQuery, parameterSource, new TaskBlockInTestRowMapper()).stream().toList().stream().toList();
         List<TaskBlock> tasks = new ArrayList<>();
         for(var block: taskBlocks) {
             block = blockRepository.findTaskBlockById(block.getId());

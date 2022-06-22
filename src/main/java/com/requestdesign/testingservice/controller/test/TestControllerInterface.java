@@ -27,7 +27,7 @@ public interface TestControllerInterface {
     public ResponseEntity getAllTests();
 
     @PostMapping("/")
-    public ResponseEntity createTest(TestCreationDto testCreateDto);
+    public ResponseEntity createTest(@RequestBody TestCreationDto testCreateDto);
 
     @GetMapping("/{testId}/phrase/{phraseId}")
     public ResponseEntity getPhraseFromTest(@PathVariable Long testId, @PathVariable Long phraseId);

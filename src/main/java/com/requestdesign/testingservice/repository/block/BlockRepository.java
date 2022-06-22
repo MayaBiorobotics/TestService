@@ -8,6 +8,7 @@ import com.requestdesign.testingservice.repository.task.TaskRepository;
 import com.requestdesign.testingservice.rowmapper.test.question.QuestionBlockRowMapper;
 import com.requestdesign.testingservice.rowmapper.test.question.QuestionRowMapper;
 import com.requestdesign.testingservice.rowmapper.test.question.QuestionVariantRowMapper;
+import com.requestdesign.testingservice.rowmapper.test.task.TaskBlockInTestRowMapper;
 import com.requestdesign.testingservice.rowmapper.test.task.TaskBlockRowMapper;
 import com.requestdesign.testingservice.rowmapper.test.task.TaskRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -73,7 +73,7 @@ public class BlockRepository {
     @Transactional
     public TaskBlock findTaskBlockById(Long blockId) throws TaskBlockNotFoundException {
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
-        String selectTaskBlock = "select * from test_to_block as ttb join task_block as tb on ttb.task_block_id = tb.id where tb.id = :id";
+        String selectTaskBlock = "select * from task_block as tb where tb.id = :id";
         parameterSource.addValue("id", blockId);
         Optional<TaskBlock> taskBlock = namedParameterJdbcTemplate.query(selectTaskBlock, parameterSource, new TaskBlockRowMapper()).stream().findFirst();
         if(taskBlock.isEmpty()) {
@@ -116,7 +116,7 @@ public class BlockRepository {
     @Transactional
     public List<TaskBlock> findAllTaskBlocks() throws TaskBlockNotFoundException {
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
-        String selectQuery = "select * from task_block as tb join test_to_block ttb on tb.id = ttb.task_block_id";
+        String selectQuery = "select * from task_block";
         List<TaskBlock> taskBlocks = namedParameterJdbcTemplate.query(selectQuery, parameterSource, new TaskBlockRowMapper()).stream().toList();
         for(var block: taskBlocks) {
             block.setTasks(findTaskBlockById(block.getId()).getTasks());
@@ -147,11 +147,11 @@ public class BlockRepository {
     @Transactional
     public Long createTaskBlock(TaskBlockCreateDto taskBlock) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        String createQuestionQuery = "insert into task_block(title) "+
+        String createTaskBlockQuery = "insert into task_block(title) "+
                 "values(:title)";
         mapSqlParameterSource.addValue("title", taskBlock.getTitle());
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        namedParameterJdbcTemplate.update(createQuestionQuery, mapSqlParameterSource, keyHolder);
+        namedParameterJdbcTemplate.update(createTaskBlockQuery, mapSqlParameterSource, keyHolder);
         Long id = (Long)keyHolder.getKeys().get("id");
         String addTaskToBlockQuery = "insert into task_block_to_task(task_block_id, task_id) " +
                 "values(:task_block_id, :task_id)";
