@@ -1,7 +1,7 @@
 package com.requestdesign.testingservice.service.test;
 
 import com.requestdesign.testingservice.dto.test.TaskBlockNumberDto;
-import com.requestdesign.testingservice.dto.test.TestCreateDto;
+import com.requestdesign.testingservice.dto.test.TestCreationDto;
 import com.requestdesign.testingservice.dto.test.TestManuallyCreateDto;
 import com.requestdesign.testingservice.dto.test.phrase.PhraseToTestDto;
 import com.requestdesign.testingservice.entity.phrase.TestPhrase;
@@ -36,7 +36,7 @@ public class TestService {
         return tests;
     }
 
-    public Long saveTest(TestCreateDto test) {
+    public Long saveTest(TestCreationDto test) {
         Long id = testRepository.saveTest(test);
         return id;
     }

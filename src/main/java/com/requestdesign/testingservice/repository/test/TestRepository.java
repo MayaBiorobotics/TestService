@@ -1,17 +1,13 @@
 package com.requestdesign.testingservice.repository.test;
 
 import com.requestdesign.testingservice.dto.test.TaskBlockNumberDto;
-import com.requestdesign.testingservice.dto.test.TestCreateDto;
+import com.requestdesign.testingservice.dto.test.TestCreationDto;
 import com.requestdesign.testingservice.dto.test.TestManuallyCreateDto;
 import com.requestdesign.testingservice.dto.test.phrase.PhraseToTestDto;
-import com.requestdesign.testingservice.dto.test.question.QuestionBlockCreateDto;
-import com.requestdesign.testingservice.dto.test.task.TaskBlockCreateDto;
-import com.requestdesign.testingservice.dto.test.task.TaskDto;
 import com.requestdesign.testingservice.entity.phrase.TestPhrase;
 import com.requestdesign.testingservice.entity.test.*;
 import com.requestdesign.testingservice.exceptions.block.TaskBlockNotFoundException;
 import com.requestdesign.testingservice.exceptions.phrase.PhraseNotFoundException;
-import com.requestdesign.testingservice.exceptions.test.TaskNotFoundException;
 import com.requestdesign.testingservice.exceptions.test.TestNotFoundException;
 import com.requestdesign.testingservice.repository.block.BlockRepository;
 import com.requestdesign.testingservice.rowmapper.phrase.TestPhraseRowMapper;
@@ -19,7 +15,6 @@ import com.requestdesign.testingservice.rowmapper.test.SimpleTestRowMapper;
 import com.requestdesign.testingservice.rowmapper.test.TestRowMapper;
 import com.requestdesign.testingservice.rowmapper.test.question.QuestionBlockRowMapper;
 import com.requestdesign.testingservice.rowmapper.test.task.TaskBlockRowMapper;
-import com.requestdesign.testingservice.rowmapper.test.task.TaskRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -77,7 +72,7 @@ public class TestRepository {
     }
 
     @Transactional
-    public Long saveTest(TestCreateDto test) {
+    public Long saveTest(TestCreationDto test) {
         System.out.println(test);
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("title", test.getTitle());

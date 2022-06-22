@@ -1,7 +1,7 @@
 package com.requestdesign.testingservice.controller.test;
 
 import com.requestdesign.testingservice.dto.test.TaskBlockNumberDto;
-import com.requestdesign.testingservice.dto.test.TestCreateDto;
+import com.requestdesign.testingservice.dto.test.TestCreationDto;
 import com.requestdesign.testingservice.dto.test.TestManuallyCreateDto;
 import com.requestdesign.testingservice.dto.test.phrase.PhraseToTestDto;
 import com.requestdesign.testingservice.entity.phrase.TestPhrase;
@@ -73,7 +73,7 @@ public class TestController implements TestControllerInterface{
     }
 
     @Override
-    public ResponseEntity createTest(TestCreateDto testCreateDto) {
+    public ResponseEntity createTest(TestCreationDto testCreateDto) {
         System.out.println(testCreateDto);
         Long id = testService.saveTest(testCreateDto);
         return new ResponseEntity(id, HttpStatus.OK);

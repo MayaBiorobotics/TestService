@@ -1,19 +1,16 @@
 package com.requestdesign.testingservice.dto.test;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.requestdesign.testingservice.entity.test.QuestionBlock;
-import com.requestdesign.testingservice.entity.test.TaskBlock;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.util.Pair;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TestCreateDto {
+public class TestCreationDto {
     @JsonProperty("title")
     private String title;
     @JsonProperty("region")
@@ -23,7 +20,7 @@ public class TestCreateDto {
     @JsonProperty("comment")
     private String comment;
     @JsonProperty("question_block_ids")
-    private ArrayList<Long> questionBlockIds;
+    private List<Long> questionBlockIds;
     @JsonProperty("task_block_numbers")
-    private ArrayList<TaskBlockNumberDto> taskBlockNumberDtos;
+    private List<TaskBlockNumberDto> taskBlockNumberDtos;
 }

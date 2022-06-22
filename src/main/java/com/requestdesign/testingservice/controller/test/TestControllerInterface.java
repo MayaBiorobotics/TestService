@@ -1,7 +1,7 @@
 package com.requestdesign.testingservice.controller.test;
 
 import com.requestdesign.testingservice.dto.test.TaskBlockNumberDto;
-import com.requestdesign.testingservice.dto.test.TestCreateDto;
+import com.requestdesign.testingservice.dto.test.TestCreationDto;
 import com.requestdesign.testingservice.dto.test.TestManuallyCreateDto;
 import com.requestdesign.testingservice.dto.test.phrase.PhraseToTestDto;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +27,7 @@ public interface TestControllerInterface {
     public ResponseEntity getAllTests();
 
     @PostMapping("/")
-    public ResponseEntity createTest(TestCreateDto testCreateDto);
+    public ResponseEntity createTest(TestCreationDto testCreateDto);
 
     @GetMapping("/{testId}/phrase/{phraseId}")
     public ResponseEntity getPhraseFromTest(@PathVariable Long testId, @PathVariable Long phraseId);
