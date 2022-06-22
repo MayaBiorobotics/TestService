@@ -1,6 +1,7 @@
 package com.requestdesign.testingservice.repository.phrase;
 
 import com.requestdesign.testingservice.dto.phrase.PhraseDto;
+import com.requestdesign.testingservice.dto.test.phrase.PhraseGroupDto;
 import com.requestdesign.testingservice.entity.phrase.DictionaryPhrase;
 import com.requestdesign.testingservice.exceptions.phrase.DictionaryPhraseNotFoundException;
 import com.requestdesign.testingservice.rowmapper.phrase.DictionaryPhraseRowMapper;
@@ -69,5 +70,12 @@ public class PhraseRepository {
         } else {
             return phrase.get();
         }
+    }
+
+    public void addPhraseGroup(PhraseGroupDto phraseGroupDto) {
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        String addGroup = "insert into phrase_group(title) values(:title)";
+        parameterSource.addValue("title", phraseGroupDto.getTitle());
+        namedParameterJdbcTemplate.update(addGroup, parameterSource);
     }
 }

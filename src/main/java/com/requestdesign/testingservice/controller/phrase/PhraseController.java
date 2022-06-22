@@ -1,6 +1,7 @@
 package com.requestdesign.testingservice.controller.phrase;
 
 import com.requestdesign.testingservice.dto.phrase.PhraseDto;
+import com.requestdesign.testingservice.dto.test.phrase.PhraseGroupDto;
 import com.requestdesign.testingservice.dto.test.phrase.PhraseToTestDto;
 import com.requestdesign.testingservice.entity.phrase.DictionaryPhrase;
 import com.requestdesign.testingservice.entity.phrase.TestPhrase;
@@ -51,6 +52,12 @@ public class PhraseController implements PhraseControllerInterface{
     @Override
     public ResponseEntity addPhraseToDictionary(PhraseDto phraseDto) {
         phraseService.addPhraseToDictionary(phraseDto);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity addPhraseGroup(PhraseGroupDto phraseGroupDto) {
+        phraseService.addPhraseGroup(phraseGroupDto);
         return new ResponseEntity(HttpStatus.OK);
     }
 }

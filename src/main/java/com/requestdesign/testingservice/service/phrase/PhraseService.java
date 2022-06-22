@@ -2,6 +2,7 @@ package com.requestdesign.testingservice.service.phrase;
 
 import com.requestdesign.testingservice.controller.phrase.PhraseControllerInterface;
 import com.requestdesign.testingservice.dto.phrase.PhraseDto;
+import com.requestdesign.testingservice.dto.test.phrase.PhraseGroupDto;
 import com.requestdesign.testingservice.dto.test.phrase.PhraseToTestDto;
 import com.requestdesign.testingservice.entity.phrase.DictionaryPhrase;
 import com.requestdesign.testingservice.entity.phrase.TestPhrase;
@@ -37,5 +38,9 @@ public class PhraseService {
     public DictionaryPhrase findPhraseById(Long phraseId) throws DictionaryPhraseNotFoundException {
         DictionaryPhrase phrase = phraseRepository.findPhraseById(phraseId);
         return phrase;
+    }
+
+    public void addPhraseGroup(PhraseGroupDto phraseGroupDto) {
+        phraseRepository.addPhraseGroup(phraseGroupDto);
     }
 }

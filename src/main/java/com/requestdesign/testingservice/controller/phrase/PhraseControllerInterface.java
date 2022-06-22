@@ -1,6 +1,7 @@
 package com.requestdesign.testingservice.controller.phrase;
 
 import com.requestdesign.testingservice.dto.phrase.PhraseDto;
+import com.requestdesign.testingservice.dto.test.phrase.PhraseGroupDto;
 import com.requestdesign.testingservice.dto.test.phrase.PhraseToTestDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,4 +18,7 @@ public interface PhraseControllerInterface {
 
     @PostMapping("/")
     public ResponseEntity addPhraseToDictionary(@RequestBody PhraseDto phraseDto);
+
+    @PostMapping("/group")
+    public ResponseEntity addPhraseGroup(@RequestBody PhraseGroupDto phraseGroupDto);
 }

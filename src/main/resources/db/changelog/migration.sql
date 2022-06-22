@@ -180,7 +180,7 @@ create table codes
 (
     id bigint default nextval('codes_sequence') not null primary key,
     code varchar(7) not null,
-    result_id bigint not null,
+    result_id bigint,
     respondent_id bigint not null,
     given timestamp not null,
     status varchar(8) not null,
