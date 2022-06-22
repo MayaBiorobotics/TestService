@@ -22,7 +22,7 @@ public class User implements UserDetails {
     private String login;
     private String password;
     @ManyToMany
-    private HashSet<Role> roles;
+    private Set<Role> roles;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

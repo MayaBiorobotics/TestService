@@ -1,7 +1,10 @@
+-- liquibase formatted sql
+
+-- changeset fedor:1
 create sequence candidate_sequence
     start with 1
     increment by 1
-    cache 3;
+    cache 1;
 
 create table respondent
 (
@@ -10,8 +13,8 @@ create table respondent
 
 create sequence test_sequence
     increment by 1
-    start with 1000
-    cache 10;
+    start with 1
+    cache 1;
 
 create table test
 (
@@ -19,36 +22,36 @@ create table test
     title varchar(50) not null,
     url varchar(20) not null,
     region varchar(20) not null,
-    comment varchar(200) not null
+    comment varchar(200)
 );
 
 create sequence question_block_sequence
     increment by 1
     start with 1
-    cache 10;
+    cache 1;
 
 create table question_block
 (
     id bigint default nextval('question_block_sequence') not null primary key,
-    title varchar(50)
+    title varchar(50) not null
 );
 
 create sequence question_sequence
     increment by 1
     start with 1
-    cache 10;
+    cache 1;
 
 create table question
 (
     id bigint default nextval('question_sequence') not null primary key,
     text varchar(500) not null,
-    picture varchar(500) not null
+    picture varchar(500)
 );
 
 create sequence question_variant_sequence
     increment by 1
     start with 1
-    cache 10;
+    cache 1;
 
 create table question_variant
 (
@@ -174,7 +177,7 @@ create table test_phrase
 create sequence codes_sequence
     increment by 1
     start with 1
-    cache 10;
+    cache 1;
 
 create table codes
 (
@@ -191,7 +194,7 @@ create table codes
 create sequence test_statistic_sequence
     increment by 1
     start with 1
-    cache 10;
+    cache 1;
 
 create table test_statistics
 (
