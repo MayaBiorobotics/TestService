@@ -10,7 +10,7 @@ public class ResultRowMapper implements RowMapper<TestResult> {
     @Override
     public TestResult mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new TestResult()
-                .setId(rs.getLong("result_id"))
+                .setId(rs.getLong("id"))
                 .setDatetime(rs.getDate("creation_time"))
                 .setRespondentId(rs.getLong("respondent_id"))
                 .setRespondentType(rs.getInt("respondent_type"))

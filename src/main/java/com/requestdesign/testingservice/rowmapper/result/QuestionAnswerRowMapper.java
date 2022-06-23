@@ -12,8 +12,8 @@ public class QuestionAnswerRowMapper implements RowMapper<QuestionAnswer> {
     public QuestionAnswer mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new QuestionAnswer()
                 .setQuestionId(rs.getLong("question_id"))
-                .setId(rs.getLong("question_result_id"))
-                .setTestResultId(rs.getLong("result_id"))
+                .setId(rs.getLong("id"))
+                .setTestResultId(rs.getLong("test_result_id"))
                 .setVariantId(rs.getLong("variant_id"));
     }
 }

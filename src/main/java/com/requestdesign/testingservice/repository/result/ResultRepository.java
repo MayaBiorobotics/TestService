@@ -1,5 +1,7 @@
 package com.requestdesign.testingservice.repository.result;
 
+import com.requestdesign.testingservice.dto.client.ClientTestResultDto;
+import com.requestdesign.testingservice.entity.phrase.Code;
 import com.requestdesign.testingservice.entity.result.QuestionAnswer;
 import com.requestdesign.testingservice.entity.result.TaskAnswer;
 import com.requestdesign.testingservice.entity.result.TestResult;
@@ -17,6 +19,8 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Time;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -86,5 +90,26 @@ public class ResultRepository {
         }
 
         return questionAnswer.get();
+    }
+
+    public void saveResult(Long resultId, ClientTestResultDto result) {
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        String saveResultQuery = "update test_result set creation_time = :date_time where id = :resultId";
+        parameterSource.addValue("date_time", LocalDateTime.now());
+        parameterSource.addValue("resultId", resultId);
+        namedParameterJdbcTemplate.update(saveResultQuery, parameterSource);
+        String saveQuestionAnswerQuery = "insert into question_answer(test_result_id, question_id, variant_id) values(:resultId, :question_id, :variant_id)";
+        String saveTaskQuery = "insert into task_answer(test_result_id, task_id, text) values(:resultId, :task_id, :text)";
+        for(var questionAnswer: result.getQuestionAnswers()) {
+            parameterSource.addValue("question_id", questionAnswer.getQuestionId());
+            parameterSource.addValue("variant_id", questionAnswer.getVariantId());
+            namedParameterJdbcTemplate.update(saveQuestionAnswerQuery, parameterSource);
+        }
+
+        for(var taskAnswer: result.getTaskAnswers()) {
+            parameterSource.addValue("task_id", taskAnswer.getTaskId());
+            parameterSource.addValue("text", taskAnswer.getText());
+            namedParameterJdbcTemplate.update(saveTaskQuery, parameterSource);
+        }
     }
 }

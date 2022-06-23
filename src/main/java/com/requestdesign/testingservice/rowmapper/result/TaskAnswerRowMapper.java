@@ -11,9 +11,8 @@ public class TaskAnswerRowMapper implements RowMapper<TaskAnswer> {
     public TaskAnswer mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new TaskAnswer()
                 .setTaskId(rs.getLong("task_id"))
-                .setId(rs.getLong("task_result_id"))
-                .setNumber(rs.getInt("number"))
+                .setId(rs.getLong("id"))
                 .setText(rs.getString("text"))
-                .setTestResultId(rs.getLong("result_id"));
+                .setTestResultId(rs.getLong("test_result_id"));
     }
 }

@@ -2,6 +2,7 @@ package com.requestdesign.testingservice.repository.code;
 
 import com.requestdesign.testingservice.dto.code.CodeDto;
 import com.requestdesign.testingservice.entity.phrase.Code;
+import com.requestdesign.testingservice.exceptions.code.CodeNotFoundException;
 import com.requestdesign.testingservice.repository.result.ResultRepository;
 import com.requestdesign.testingservice.rowmapper.code.CodeRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +11,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class CodeRepository {
@@ -45,5 +46,17 @@ public class CodeRepository {
         String updateCodeQuery = "update codes set result_id = :result_id";
         parameterSource.addValue("result_id", resultId);
         namedParameterJdbcTemplate.update(updateCodeQuery, parameterSource);
+    }
+
+    @Transactional
+    public Code findCode(String codeString) throws CodeNotFoundException {
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        String selectQuery = "select * from codes where code = :code";
+        parameterSource.addValue("code", codeString);
+        Optional<Code> code = namedParameterJdbcTemplate.query(selectQuery, parameterSource, new CodeRowMapper()).stream().findFirst();
+        if(code.isEmpty()) {
+            throw new CodeNotFoundException("Такого кода нет");
+        }
+        return code.get();
     }
 }
