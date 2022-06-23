@@ -36,4 +36,8 @@ public class CodeService {
         Code code = codeRepository.findCode(codeString);
         return code;
     }
+
+    public void setAsUsed(String code) {
+        codeRepository.setAsUsed(code);
+    }
 }

@@ -4,6 +4,7 @@ import com.requestdesign.testingservice.dto.client.ClientTestResultDto;
 import com.requestdesign.testingservice.entity.test.Test;
 import com.requestdesign.testingservice.exceptions.block.TaskBlockNotFoundException;
 import com.requestdesign.testingservice.exceptions.code.CodeNotFoundException;
+import com.requestdesign.testingservice.exceptions.code.CodeUsedException;
 import com.requestdesign.testingservice.exceptions.test.TestNotFoundException;
 import com.requestdesign.testingservice.service.client.ClientService;
 import com.requestdesign.testingservice.service.test.TestService;
@@ -44,6 +45,8 @@ public class ClientController implements ClientControllerInterface{
             return new ResponseEntity(HttpStatus.OK);
         } catch (CodeNotFoundException e) {
             return new ResponseEntity("Неверный код", HttpStatus.BAD_REQUEST);
+        } catch (CodeUsedException e) {
+            return new ResponseEntity("Код уже был использован", HttpStatus.BAD_REQUEST);
         }
     }
 }

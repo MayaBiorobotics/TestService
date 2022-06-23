@@ -59,4 +59,11 @@ public class CodeRepository {
         }
         return code.get();
     }
+
+    public void setAsUsed(String code) {
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        String updateQuery = "update codes set status = 'used' where code = :code";
+        parameterSource.addValue("code", code);
+        namedParameterJdbcTemplate.update(updateQuery, parameterSource);
+    }
 }
