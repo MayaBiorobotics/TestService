@@ -34,7 +34,7 @@ public class CodeRepository {
     }
 
     @Transactional
-    public void generateCode(String code, CodeDto codeDto) {
+    public Long generateCode(String code, CodeDto codeDto) {
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         String createCodeQuery = "insert into codes(code, respondent_id, status, given) values(:code, :respondent_id, :status, :given)";
         parameterSource.addValue("code", code);
@@ -46,6 +46,7 @@ public class CodeRepository {
         String updateCodeQuery = "update codes set result_id = :result_id";
         parameterSource.addValue("result_id", resultId);
         namedParameterJdbcTemplate.update(updateCodeQuery, parameterSource);
+        return resultId;
     }
 
     @Transactional

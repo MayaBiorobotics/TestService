@@ -141,6 +141,10 @@ public class TestRepository {
 
     public void addPhraseToTest(Long testId, PhraseToTestDto phraseAddToTestDto) {
         try {
+            System.out.println("Hello wolrd");
+            System.out.println(testId);
+            System.out.println(phraseAddToTestDto.getPhraseId());
+            System.out.println(phraseAddToTestDto.getIntensivity());
             MapSqlParameterSource parameterSource = new MapSqlParameterSource();
             String addPhraseQuery = "insert into test_phrase(phrase_id, intensivity, test_id) "+
                     "values(:phrase_id, :intensivity, :test_id)";

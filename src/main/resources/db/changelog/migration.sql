@@ -168,6 +168,8 @@ create table test_phrase
     id bigint default nextval('test_phrase_sequence') not null primary key,
     intensivity int not null,
     test_id bigint not null,
+    phrase_id bigint not null,
+    foreign key(phrase_id) references phrase_dictionary(id),
     foreign key (test_id) references test(id)
 );
 

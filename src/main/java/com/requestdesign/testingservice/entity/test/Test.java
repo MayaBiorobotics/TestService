@@ -21,4 +21,5 @@ public class Test {
     private String comment;
     private Set<QuestionBlock> questionBlocks;
     private Set<TaskBlock> taskBlocks;
+    private Set<String> phrases;
 }

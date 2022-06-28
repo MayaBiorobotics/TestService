@@ -67,4 +67,9 @@ public class TestService {
     public void editPhraseInTest(Long testId, PhraseToTestDto phraseToTest) {
         testRepository.editPhraseInTest(testId, phraseToTest);
     }
+
+    private void putPhraseIntoTest(Long testId) {
+        List<TestPhrase> testPhrases = testRepository.findAllTestPhrasesFromTest(testId);
+        
+    }
 }

@@ -5,6 +5,8 @@ import com.requestdesign.testingservice.entity.test.Test;
 import com.requestdesign.testingservice.exceptions.block.TaskBlockNotFoundException;
 import com.requestdesign.testingservice.exceptions.code.CodeNotFoundException;
 import com.requestdesign.testingservice.exceptions.code.CodeUsedException;
+import com.requestdesign.testingservice.exceptions.phrase.DictionaryPhraseNotFoundException;
+import com.requestdesign.testingservice.exceptions.phrase.EmptyTestPhrasesException;
 import com.requestdesign.testingservice.exceptions.test.TestNotFoundException;
 import com.requestdesign.testingservice.service.client.ClientService;
 import com.requestdesign.testingservice.service.test.TestService;
@@ -29,10 +31,11 @@ public class ClientController implements ClientControllerInterface{
     public ResponseEntity getTest(Long testId) {
         try {
             Test test = testService.findTestById(testId);
+            test.setPhrases(clientService.configurePhrasesForTest(testId));
+            System.out.println(test.getPhrases());
             return new ResponseEntity(test, HttpStatus.OK);
-        } catch (TestNotFoundException e) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
-        } catch (TaskBlockNotFoundException e) {
+        } catch (TestNotFoundException | TaskBlockNotFoundException | DictionaryPhraseNotFoundException |
+                 EmptyTestPhrasesException e) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
     }
