@@ -16,13 +16,27 @@ create sequence test_sequence
     start with 1
     cache 1;
 
+
+create sequence site_sequence
+    increment by 1
+    start with 1
+    cache 1;
+
+create table site
+(
+    id bigint default nextval('site_sequence') not null primary key,
+    url varchar(200) not null
+);
+
 create table test
 (
     id bigint default nextval('test_sequence') not null primary key,
     title varchar(50) not null,
     url varchar(20) not null,
     region varchar(20) not null,
-    comment varchar(200)
+    comment varchar(200),
+    site_id bigint,
+    foreign key (site_id) references site(id)
 );
 
 create sequence question_block_sequence

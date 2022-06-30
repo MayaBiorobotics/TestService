@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/code")
+@RequestMapping("/api/code")
 public class CodeController implements CodeControllerInterface{
     private final CodeService codeService;
 

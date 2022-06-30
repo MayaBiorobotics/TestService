@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/result")
+@RequestMapping("/api/result")
 @Slf4j
 public class ResultController implements ResultControllerInterface{
     private final ResultService resultService;

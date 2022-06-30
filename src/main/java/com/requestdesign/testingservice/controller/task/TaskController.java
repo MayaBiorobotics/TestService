@@ -14,7 +14,7 @@ import java.nio.channels.ReadPendingException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/task")
+@RequestMapping("/api/task")
 public class TaskController implements TaskControllerInterface{
     private final TaskService taskService;
 

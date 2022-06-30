@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/test")
+@RequestMapping("/api/test")
 @Slf4j
 public class TestController implements TestControllerInterface{
     @Autowired

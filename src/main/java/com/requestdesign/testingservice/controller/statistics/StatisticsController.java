@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/statistics")
+@RequestMapping("/api/statistics")
 @Slf4j
 public class StatisticsController implements StatisticsControllerInterface {
     private final StatisticService statisticService;

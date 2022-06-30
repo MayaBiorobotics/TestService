@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/block")
+@RequestMapping("/api/block")
 public class BlockController implements BlockControllerInterface {
     private final BlockService blockService;
 
